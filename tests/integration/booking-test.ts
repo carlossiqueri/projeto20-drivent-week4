@@ -73,3 +73,7 @@ describe('get /booking', () => {
     });
   });
 });
+
+describe('post /booking', () => {
+    
+})
