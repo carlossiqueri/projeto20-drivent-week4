@@ -1,5 +1,5 @@
 import faker from '@faker-js/faker';
-import { TicketStatus } from '@prisma/client';
+import { Ticket, TicketStatus, TicketType } from '@prisma/client';
 import { prisma } from '@/config';
 
 export async function createTicketType() {
@@ -43,4 +43,25 @@ export async function createTicketTypeWithHotel() {
       includesHotel: true,
     },
   });
+}
+
+export async function ticketWithTypeFactory(status: boolean, isRemote: boolean, includesHotel: boolean) {
+  const testTicket: Ticket & { TicketType: TicketType } = {
+    id: 1,
+    ticketTypeId: 1,
+    enrollmentId: 1,
+    status: status ? 'PAID' : 'RESERVED',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    TicketType: {
+      id: 1,
+      name: faker.name.findName(),
+      price: faker.datatype.number(),
+      isRemote,
+      includesHotel,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  };
+  return testTicket;
 }
