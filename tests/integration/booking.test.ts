@@ -36,7 +36,7 @@ describe('get /booking', () => {
     it('Should return status 401 if invalid token is given', async () => {
       const testToken = faker.lorem.sentence(10);
 
-      const result = await server.get('/bookings').set('Authorization', `Bearer ${testToken}`);
+      const result = await server.get('/booking').set('Authorization', `Bearer ${testToken}`);
 
       expect(result.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -46,7 +46,7 @@ describe('get /booking', () => {
     it('Should return 200 and with the booking info if user has a booking', async () => {
       const testUser = await createUser();
       const testToken = await generateValidToken(testUser);
-      const testEnrollment = await createEnrollmentWithAddress();
+      const testEnrollment = await createEnrollmentWithAddress(testUser);
       const testTicketType = await createTicketTypeWithHotel();
       const testTicket = await createTicket(testEnrollment.id, testTicketType.id, TicketStatus.PAID);
       const testHotel = await createHotel();
@@ -62,7 +62,7 @@ describe('get /booking', () => {
 
       expect(testBooking.body).toEqual({
         id: booking.id,
-        room: {
+        Room: {
           id: testRoom.id,
           name: testRoom.name,
           capacity: testRoom.capacity,
@@ -78,7 +78,7 @@ describe('get /booking', () => {
 describe('post /booking', () => {
   describe('When token given is not a valid one', () => {
     it('Should return 401 if no token is given', async () => {
-      const result = await server.get('/booking');
+      const result = await server.post('/booking');
 
       expect(result.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -86,7 +86,7 @@ describe('post /booking', () => {
     it('Should return status 401 if invalid token is given', async () => {
       const testToken = faker.lorem.sentence(10);
 
-      const result = await server.get('/bookings').set('Authorization', `Bearer ${testToken}`);
+      const result = await server.post('/booking').set('Authorization', `Bearer ${testToken}`);
 
       expect(result.status).toBe(httpStatus.UNAUTHORIZED);
     });
@@ -95,7 +95,7 @@ describe('post /booking', () => {
     it('Should return 200 and with the booking info if user has a booking', async () => {
       const testUser = await createUser();
       const testToken = await generateValidToken(testUser);
-      const testEnrollment = await createEnrollmentWithAddress();
+      const testEnrollment = await createEnrollmentWithAddress(testUser);
       const testTicketType = await createTicketTypeWithHotel();
       const testTicket = await createTicket(testEnrollment.id, testTicketType.id, TicketStatus.PAID);
       const testPayment = await createPayment(testTicket.id, testTicketType.price);
@@ -104,12 +104,14 @@ describe('post /booking', () => {
 
       // Create booking for test => do a factory
 
-      const booking = await newBookingFactory(testUser.id, testRoom.id);
+      // const booking = await newBookingFactory(testUser.id, testRoom.id);
 
       const testBooking = await server
         .post('/booking')
         .set('Authorization', `Bearer ${testToken}`)
         .send({ roomId: testRoom.id });
+
+        console.log(testBooking.body)
 
       expect(testBooking.status).toBe(httpStatus.OK);
 

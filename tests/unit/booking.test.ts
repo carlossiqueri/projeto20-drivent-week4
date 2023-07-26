@@ -6,6 +6,7 @@ import ticketsRepository from '../../src/repositories/tickets-repository/index';
 import bookingService from '../../src/repositories/booking-repository/index';
 import roomRepository from '../../src/repositories/room-repository/index';
 import userRepository from '../../src/repositories/user-repository/index';
+import { newBookingFactory } from '../factories/booking-factory';
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -63,7 +64,7 @@ describe('post /booking', () => {
     });
   });
   it('Should return 403 if there is no available room', async () => {
-    jest.spyOn(userRepository, 'create').mockResolvedValue(createUser());
+    jest.spyOn(userRepository, 'create').mockResolvedValue(await createUser());
     jest
       .spyOn(enrollmentRepository, 'findWithAddressByUserId')
       .mockResolvedValue(createEnrollmentWithAddress(await createUser()));
