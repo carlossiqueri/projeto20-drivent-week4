@@ -104,14 +104,11 @@ describe('post /booking', () => {
 
       // Create booking for test => do a factory
 
-      // const booking = await newBookingFactory(testUser.id, testRoom.id);
+      const booking = await newBookingFactory(testUser.id, testRoom.id);
 
-      const testBooking = await server
-        .post('/booking')
-        .set('Authorization', `Bearer ${testToken}`)
-        .send({ roomId: testRoom.id });
-
-        console.log(testBooking.body)
+      const testBooking = await server.post('/booking').set('Authorization', `Bearer ${testToken}`).send({
+        roomId: testRoom.id
+      })
 
       expect(testBooking.status).toBe(httpStatus.OK);
 

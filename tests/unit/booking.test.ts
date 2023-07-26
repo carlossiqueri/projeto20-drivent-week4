@@ -7,6 +7,8 @@ import bookingService from '../../src/repositories/booking-repository/index';
 import roomRepository from '../../src/repositories/room-repository/index';
 import userRepository from '../../src/repositories/user-repository/index';
 import { newBookingFactory } from '../factories/booking-factory';
+import faker from '@faker-js/faker';
+import { string } from 'joi';
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -51,14 +53,23 @@ describe('post /booking', () => {
   // => roomId não existente: Deve retornar status code 404.
   // => roomId sem vaga: Deve retornar status code 403.
   // => Fora da regra de negócio: Deve retornar status code 403.
+  it('dlfjkcnsc,gvjndhfcsjlbhvndfslokgjnfdslkfg', async () => {
+    const userAleatorio = await createUser();
+
+    expect(userAleatorio).toBe(userAleatorio);
+  
+  });
   it('Should return 404 if room does not exist', async () => {
+    const testUser = await createUser();
+    const roomId = faker.datatype.number({ min: 500, max: 999 });
+    const testEnrollment = await createEnrollmentWithAddress(testUser);
     jest
       .spyOn(enrollmentRepository, 'findWithAddressByUserId')
-      .mockResolvedValue(createEnrollmentWithAddress(await createUser()));
-    jest.spyOn(roomRepository, 'getRoom').mockResolvedValueOnce(null);
+      .mockResolvedValue(createEnrollmentWithAddress(testUser));
+    jest.spyOn(roomRepository, 'getRoom').mockImplementationOnce(() => null);
 
-    const booking = bookingService.postBooking(1, 1);
-    await expect(booking).rejects.toEqual({
+    const booking = await bookingService.postBooking(testUser.id, roomId);
+    expect(booking).rejects.toEqual({
       name: 'NotFoundError',
       message: 'Room not found',
     });
