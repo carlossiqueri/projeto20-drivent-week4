@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthenticatedRequest } from '../middlewares';
-import bookingService from '../services/booking-service';
+import bookingService from '../../src/services/booking-service/index';
 import httpStatus from 'http-status';
 
 export async function getBookings(req: AuthenticatedRequest, res: Response) {

@@ -71,15 +71,15 @@ export function createFakeTicket(status: string, isRemote: boolean, includesHote
     id: 300,
     ticketTypeId: 353,
     enrollmentId: 429,
-    status: 'PAID',
+    status: status,
     createdAt: faker.datatype.datetime(),
     updatedAt: faker.datatype.datetime(),
     TicketType: {
       id: 353,
       name: 'Devin Von',
       price: 11661,
-      isRemote: false,
-      includesHotel: true,
+      isRemote: isRemote,
+      includesHotel: includesHotel,
       createdAt: faker.datatype.datetime(),
       updatedAt: faker.datatype.datetime()
     }

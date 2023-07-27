@@ -14,9 +14,10 @@ async function postBooking(userId: number, roomId: number) {
 }
 
 async function getRoomById(roomId: number) {
-  return await prisma.booking.findMany({
+  const room =  await prisma.booking.findMany({
     where: { roomId },
   });
+  return room;
 }
 
 async function updateBooking(bookingId: number, userId: number, roomId: number) {
