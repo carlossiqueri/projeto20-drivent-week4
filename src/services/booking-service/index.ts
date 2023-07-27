@@ -26,18 +26,29 @@ async function postBooking(userId: number, roomId: number) {
 
   const ticketType = await ticketsRepository.findTickeWithTypeById(ticket.ticketTypeId);
 
-  if(ticketType?.TicketType.isRemote === true || ticketType.TicketType.isRemote === null || ticketType.TicketType.isRemote === undefined) throw forbiddenError();
-  if(ticketType?.TicketType.includesHotel === false || ticketType.TicketType.isRemote === null || ticketType.TicketType.isRemote === undefined) throw forbiddenError();
-  if(ticketType.status ===  'RESERVED' || ticketType.status === null || ticketType.status === undefined) throw forbiddenError();
- 
+  if (
+    ticketType?.TicketType.isRemote === true ||
+    ticketType.TicketType.isRemote === null ||
+    ticketType.TicketType.isRemote === undefined
+  )
+    throw forbiddenError();
+  if (
+    ticketType?.TicketType.includesHotel === false ||
+    ticketType.TicketType.isRemote === null ||
+    ticketType.TicketType.isRemote === undefined
+  )
+    throw forbiddenError();
+  if (ticketType.status === 'RESERVED' || ticketType.status === null || ticketType.status === undefined)
+    throw forbiddenError();
+
   const room = await roomRepository.getRoom(roomId);
   if (!room) throw notFoundError();
 
   const checkRoom = await bookingRepository.getRoomById(roomId);
   if (checkRoom.length >= room.capacity) throw forbiddenError();
-  console.log('check room check')
+  console.log('check room check');
   const newBooking = await bookingRepository.postBooking(userId, roomId);
-  console.log('newBooking check')
+  console.log('newBooking check');
   return {
     bookingId: newBooking.id,
   };

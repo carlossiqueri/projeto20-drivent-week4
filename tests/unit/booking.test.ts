@@ -181,8 +181,8 @@ describe('POST /booking', () => {
     const ticketIncludesHotel = true;
     const fakeTicket: any = createFakeTicket(ticketStatus, ticketIsRemote, ticketIncludesHotel);
     const fakeBooking = createFakeBooking(userId, roomId, bookingId);
-    const fakeRoom = createFakeRoom(roomId, roomCapacity)
-   
+    const fakeRoom = createFakeRoom(roomId, roomCapacity);
+
     const enrollmentMock = jest.spyOn(enrollmentRepository, 'findWithAddressByUserId');
     enrollmentMock.mockResolvedValueOnce(fakeEnrollment);
 
@@ -196,7 +196,7 @@ describe('POST /booking', () => {
     roomMock.mockResolvedValueOnce(fakeRoom);
 
     const bookingMock = jest.spyOn(bookingRepository, 'getRoomById');
-    bookingMock.mockResolvedValueOnce(fakeBooking)
+    bookingMock.mockResolvedValueOnce(fakeBooking);
 
     const promise = bookingService.postBooking(userId, roomId);
 
@@ -205,6 +205,32 @@ describe('POST /booking', () => {
 });
 
 describe('PUT /booking/:bookingId', () => {
+  it('Should return 404 if user does not have an enrollment', async () => {
+    const userId = faker.datatype.number({ min: 1 });
+    const roomId = faker.datatype.number({ min: 500, max: 999 });
+
+    const enrollmentMock = jest.spyOn(enrollmentRepository, 'findWithAddressByUserId');
+    enrollmentMock.mockResolvedValueOnce(null);
+
+    const promise = bookingService.postBooking(userId, roomId);
+
+    await expect(promise).rejects.toEqual(notFoundError());
+  });
+  it('Should return 404 if user does not have a ticket', async () => {
+    const userId = faker.datatype.number({ min: 1 });
+    const roomId = faker.datatype.number({ min: 500, max: 999 });
+    const fakeEnrollment = createFakeEnrollment();
+
+    const enrollmentMock = jest.spyOn(enrollmentRepository, 'findWithAddressByUserId');
+    enrollmentMock.mockResolvedValueOnce(fakeEnrollment);
+
+    const ticketMock = jest.spyOn(ticketsRepository, 'findTicketByEnrollmentId');
+    ticketMock.mockResolvedValueOnce(null);
+
+    const promise = bookingService.postBooking(userId, roomId);
+
+    await expect(promise).rejects.toEqual(notFoundError());
+  });
   it('Should return 404 if room does not exist', async () => {
     const userId = faker.datatype.number({ min: 1 });
     const roomId = faker.datatype.number({ min: 500, max: 999 });
@@ -242,8 +268,8 @@ describe('PUT /booking/:bookingId', () => {
     const ticketIncludesHotel = true;
     const fakeTicket: any = createFakeTicket(ticketStatus, ticketIsRemote, ticketIncludesHotel);
     const fakeBooking = createFakeBooking(userId, roomId, bookingId);
-    const fakeRoom = createFakeRoom(roomId, roomCapacity)
-   
+    const fakeRoom = createFakeRoom(roomId, roomCapacity);
+
     const enrollmentMock = jest.spyOn(enrollmentRepository, 'findWithAddressByUserId');
     enrollmentMock.mockResolvedValueOnce(fakeEnrollment);
 
@@ -257,10 +283,10 @@ describe('PUT /booking/:bookingId', () => {
     roomMock.mockResolvedValueOnce(fakeRoom);
 
     const bookingMock = jest.spyOn(bookingRepository, 'getRoomById');
-    bookingMock.mockResolvedValueOnce(fakeBooking)
+    bookingMock.mockResolvedValueOnce(fakeBooking);
 
     const promise = bookingService.postBooking(userId, roomId);
 
     expect(promise).rejects.toEqual(forbiddenError());
   });
-})
+});

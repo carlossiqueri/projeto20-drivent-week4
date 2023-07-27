@@ -25,7 +25,7 @@ beforeEach(async () => {
   await cleanDb();
 });
 
-describe('get /booking', () => {
+describe('GET /booking', () => {
   describe('When token given is not a valid one', () => {
     it('Should return 401 if no token is given', async () => {
       const result = await server.get('/booking');
@@ -75,7 +75,7 @@ describe('get /booking', () => {
   });
 });
 
-describe('post /booking', () => {
+describe('POST /booking', () => {
   describe('When token given is not a valid one', () => {
     it('Should return 401 if no token is given', async () => {
       const result = await server.post('/booking');
@@ -107,8 +107,8 @@ describe('post /booking', () => {
       const booking = await newBookingFactory(testUser.id, testRoom.id);
 
       const testBooking = await server.post('/booking').set('Authorization', `Bearer ${testToken}`).send({
-        roomId: testRoom.id
-      })
+        roomId: testRoom.id,
+      });
 
       expect(testBooking.status).toBe(httpStatus.OK);
 
