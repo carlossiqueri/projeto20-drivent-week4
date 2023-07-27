@@ -65,3 +65,25 @@ export async function ticketWithTypeFactory(status: boolean, isRemote: boolean, 
   };
   return testTicket;
 }
+
+export function createFakeTicket(){
+  const fakeTicket = {
+    id: 300,
+    ticketTypeId: 353,
+    enrollmentId: 429,
+    status: 'PAID',
+    createdAt: faker.datatype.datetime(),
+    updatedAt: faker.datatype.datetime(),
+    TicketType: {
+      id: 353,
+      name: 'Devin Von',
+      price: 11661,
+      isRemote: false,
+      includesHotel: true,
+      createdAt: faker.datatype.datetime(),
+      updatedAt: faker.datatype.datetime()
+    }
+  }
+
+  return fakeTicket;
+}
