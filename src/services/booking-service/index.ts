@@ -27,7 +27,11 @@ async function postBooking(userId: number, roomId: number) {
   if (!ticket) throw notFoundError();
 
   const ticketType = await ticketsRepository.findTickeWithTypeById(ticket.ticketTypeId);
-  if (ticketType?.TicketType.isRemote === true || ticketType?.TicketType.includesHotel === false)
+  if (
+    ticketType?.TicketType.isRemote === true ||
+    ticketType?.TicketType.includesHotel === false ||
+    ticketType?.status === 'RESERVED'
+  )
     throw forbiddenError();
 
   const room = await roomRepository.getRoom(roomId);
@@ -44,12 +48,7 @@ async function postBooking(userId: number, roomId: number) {
 }
 
 async function updateBooking(bookingId: number, userId: number, roomId: number) {
-  //Error:
-  // => roomId não existente: Deve retornar status code 404.
-  // => roomId sem vaga: Deve retornar status code 403.
-  // => Fora da regra de negócio: Deve retornar status code 403.
-  // - A troca pode ser efetuada para usuários que possuem reservas.
-  // - A troca pode ser efetuada apenas para quartos livres.
+
   const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) throw notFoundError();
 

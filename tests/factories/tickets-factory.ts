@@ -66,7 +66,7 @@ export async function ticketWithTypeFactory(status: boolean, isRemote: boolean, 
   return testTicket;
 }
 
-export function createFakeTicket(){
+export function createFakeTicket(status: string, isRemote: boolean, includesHotel: boolean){
   const fakeTicket = {
     id: 300,
     ticketTypeId: 353,
